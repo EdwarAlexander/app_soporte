@@ -2,11 +2,15 @@ import { Router } from 'express';
 import equipoRoute from './equipoRoute';
 import nivelRoute from './nivelRoute';
 import estadoRoute from './estadoRoute';
+import sedeRoute from './sedeRoute';
+import soporteRoute from './soporteRoute';
 
 const router = Router();
 
 router.use(equipoRoute);
 router.use(nivelRoute);
 router.use(estadoRoute);
+router.use(sedeRoute);
+router.use(soporteRoute);
 
 export default router;

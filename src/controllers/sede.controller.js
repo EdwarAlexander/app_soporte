@@ -1,10 +1,10 @@
 import { getConnection, sql } from '../database/connection';
 import { statusErrorInternal, statusErrorValidation, statusSave, statusToList } from '../answer/answer.format';
 
-const getEstado = async (req, res) => {
+const getSede = async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('exec spEstadoAll');
+        const result = await pool.request().query('exec spSedeAll');
         const answer = statusToList(result.recordset);
         res.status(200).json(answer);
     } catch (error) {
@@ -13,10 +13,10 @@ const getEstado = async (req, res) => {
     }
 }
 
-const postEstado = async (req, res) => {
+const postSede = async (req, res) => {
     const { nombre, usuario } = req.body;
     if (nombre == null || usuario == null) {
-        const answerValidation = statusErrorValidation('Debe enviar el campo nombre o usuario');
+        const answerValidation = statusErrorValidation('Debe enviar los campos nombre, usuario');
         return res.status(401).json(answerValidation);
     }
     try {
@@ -24,8 +24,8 @@ const postEstado = async (req, res) => {
         await pool.request()
             .input('nombre', sql.VarChar, nombre)
             .input('usuario', sql.VarChar, usuario)
-            .query('exec spEstadoSave @nombre, @usuario');
-        const answer = statusSave('Estado Registrado');
+            .query('exec spSedeSave @nombre,@usuario');
+        const answer = statusSave('Sede Registrada');
         res.status(201).json(answer);
     } catch (error) {
         const answerError = statusErrorInternal(error);
@@ -33,10 +33,10 @@ const postEstado = async (req, res) => {
     }
 }
 
-const putEstado = async (req, res) => {
+const putSede = async (req, res) => {
     const { id, nombre, estado } = req.body;
     if (id == null || nombre == null || estado == null) {
-        const answerValidation = statusErrorValidation('Debe enviar el campo id, nombre y estado');
+        const answerValidation = statusErrorValidation('Debe enviar los campos id,nombre,estado');
         return res.status(401).json(answerValidation);
     }
     try {
@@ -44,9 +44,9 @@ const putEstado = async (req, res) => {
         await pool.request()
             .input('id', sql.Int, id)
             .input('nombre', sql.VarChar, nombre)
-            .input('estado', sql.Bit, estado)
-            .query('exec spEstado @id,@nombre,@estado');
-        const answer = statusSave('Estado Actualizado');
+            .input('estado', sql.VarChar, estado)
+            .query('exec spSedeUpdate @id,@nombre,@estado');
+        const answer = statusSave('Sede Actualizada');
         res.status(200).json(answer);
     } catch (error) {
         const answerError = statusErrorInternal(error);
@@ -54,7 +54,7 @@ const putEstado = async (req, res) => {
     }
 }
 
-const getEstadoById = async (req, res) => {
+const getSedeById = async (req, res) => {
     const { id } = req.params;
     if (id == null) {
         const answerValidation = statusErrorValidation('Debe enviar el parametro id');
@@ -64,7 +64,7 @@ const getEstadoById = async (req, res) => {
         const pool = await getConnection();
         const result = await pool.request()
             .input('id', sql.Int, id)
-            .query('exec spEstadoSearch @id');
+            .query('exec spSedeSearch @id');
         const answer = statusToList(result.recordset);
         res.status(200).json(answer);
     } catch (error) {
@@ -72,9 +72,10 @@ const getEstadoById = async (req, res) => {
         res.status(500).json(answerError);
     }
 }
+
 export {
-    getEstado,
-    postEstado,
-    putEstado,
-    getEstadoById
+    getSede,
+    postSede,
+    putSede,
+    getSedeById
 }
