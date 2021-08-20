@@ -8,7 +8,7 @@ const statusSave = (message) => {
 const statusToList = (data) => {
     return {
         status: true,
-        data: data,
+        info: data,
         count: data.length
     }
 }

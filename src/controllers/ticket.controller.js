@@ -1,5 +1,6 @@
 import { getConnection, sql } from '../database/connection';
 import { statusErrorInternal, statusErrorValidation, statusSave, statusToList } from '../answer/answer.format';
+import {sendEmail, sendMail} from '../util/correo';
 
 const getTicket = async (req, res) => {
     try {
@@ -33,6 +34,10 @@ const postTicket = async (req, res) => {
             .input('idestado', sql.Int, idestado)
             .query('exec spTicketSave @fecha,@ipequipo,@idequipo,@titulo,@descripcion,@idnivel,@idsoporte,@usuario,@idestado');
         const answer = statusSave('Ticket Registrado');
+
+        const pruebamail= sendMail('edwar.moran@gmail.com','este mensaje es de prueba');
+        console.log(pruebamail);
+        
         res.status(201).json(answer);
     } catch (error) {
         console.log(error);
